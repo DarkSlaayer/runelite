@@ -171,7 +171,6 @@ public class ClanChatPlugin extends Plugin
 		if (member.getWorld() == client.getWorld())
 		{
 			final String memberName = Text.toJagexName(member.getUsername());
-
 			if (memberName.equals(Text.toJagexName(client.getLocalPlayer().getName())))
 			{
 				return;
