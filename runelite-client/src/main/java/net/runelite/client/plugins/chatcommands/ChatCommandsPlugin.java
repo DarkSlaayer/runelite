@@ -82,7 +82,7 @@ import org.apache.commons.text.WordUtils;
 public class ChatCommandsPlugin extends Plugin
 {
 	private static final float HIGH_ALCHEMY_CONSTANT = 0.6f;
-	private static final Pattern KILLCOUNT_PATTERN = Pattern.compile("Your (.+) kill count is: <col=ff0000>(\\d+)</col>");
+	private static final Pattern KILLCOUNT_PATTERN = Pattern.compile("Your (.+) (?:kill|harvest) count is: <col=ff0000>(\\d+)</col>");
 	private static final Pattern RAIDS_PATTERN = Pattern.compile("Your completed (.+) count is: <col=ff0000>(\\d+)</col>");
 	private static final Pattern WINTERTODT_PATTERN = Pattern.compile("Your subdued Wintertodt count is: <col=ff0000>(\\d+)</col>");
 	private static final Pattern BARROWS_PATTERN = Pattern.compile("Your Barrows chest count is: <col=ff0000>(\\d+)</col>");
@@ -198,7 +198,7 @@ public class ChatCommandsPlugin extends Plugin
 	@Subscribe
 	public void onChatMessage(ChatMessage chatMessage)
 	{
-		if (chatMessage.getType() != ChatMessageType.SERVER && chatMessage.getType() != ChatMessageType.FILTERED)
+		if (chatMessage.getType() != ChatMessageType.GAMEMESSAGE && chatMessage.getType() != ChatMessageType.SPAM)
 		{
 			return;
 		}
@@ -376,7 +376,7 @@ public class ChatCommandsPlugin extends Plugin
 		String search = message.substring(KILLCOUNT_COMMAND_STRING.length() + 1);
 
 		final String player;
-		if (type.equals(ChatMessageType.PRIVATE_MESSAGE_SENT))
+		if (type.equals(ChatMessageType.PRIVATECHATOUT))
 		{
 			player = client.getLocalPlayer().getName();
 		}
@@ -424,7 +424,7 @@ public class ChatCommandsPlugin extends Plugin
 		ChatMessageType type = chatMessage.getType();
 
 		final String player;
-		if (type.equals(ChatMessageType.PRIVATE_MESSAGE_SENT))
+		if (type.equals(ChatMessageType.PRIVATECHATOUT))
 		{
 			player = client.getLocalPlayer().getName();
 		}
@@ -498,7 +498,7 @@ public class ChatCommandsPlugin extends Plugin
 		String search = message.substring(PB_COMMAND.length() + 1);
 
 		final String player;
-		if (type.equals(ChatMessageType.PRIVATE_MESSAGE_SENT))
+		if (type.equals(ChatMessageType.PRIVATECHATOUT))
 		{
 			player = client.getLocalPlayer().getName();
 		}
@@ -771,7 +771,7 @@ public class ChatCommandsPlugin extends Plugin
 		ChatMessageType type = chatMessage.getType();
 
 		String player;
-		if (type == ChatMessageType.PRIVATE_MESSAGE_SENT)
+		if (type == ChatMessageType.PRIVATECHATOUT)
 		{
 			player = client.getLocalPlayer().getName();
 		}
@@ -880,6 +880,9 @@ public class ChatCommandsPlugin extends Plugin
 
 			switch (level)
 			{
+				case "beginner":
+					hiscoreSkill = result.getClueScrollBeginner();
+					break;
 				case "easy":
 					hiscoreSkill = result.getClueScrollEasy();
 					break;
@@ -948,7 +951,7 @@ public class ChatCommandsPlugin extends Plugin
 		final String player;
 		final HiscoreEndpoint ironmanStatus;
 
-		if (chatMessage.getType().equals(ChatMessageType.PRIVATE_MESSAGE_SENT))
+		if (chatMessage.getType().equals(ChatMessageType.PRIVATECHATOUT))
 		{
 			player = client.getLocalPlayer().getName();
 			ironmanStatus = hiscoreEndpoint;
@@ -1157,6 +1160,8 @@ public class ChatCommandsPlugin extends Plugin
 				return "Wintertodt";
 			case "barrows":
 				return "Barrows Chests";
+			case "herbi":
+				return "Herbiboar";
 
 			// cox
 			case "cox":
